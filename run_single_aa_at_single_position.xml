@@ -1,16 +1,14 @@
 <ROSETTASCRIPTS>
 
   <SCOREFXNS>
-    <ScoreFunction name="sfxn" weights="ref2015_cart"/>
+    <ScoreFunction name="sfxn" weights="ref2015"/>
 
-    <ScoreFunction name="sfxn_cc" weights="ref2015_cart">
+    <ScoreFunction name="sfxn_cc" weights="ref2015">
       <Reweight scoretype="coordinate_constraint" weight="1.0"/>
     </ScoreFunction>
   </SCOREFXNS>
 
   <RESIDUE_SELECTORS>
-    <Chain name="fixed_chains" chains="A,C"/>
-
     <Index name="residue_position_to_explore" resnums="%%pos%%" />
 
     <Neighborhood name="neighbors" selector="residue_position_to_explore"/>
@@ -23,14 +21,9 @@
     <RestrictToRepacking name="repack_only" />
     <ExtraRotamersGeneric name="ex12" ex1="1" ex2="1" />
 
-    <OperateOnResidueSubset name="fix_some_chains" selector="fixed_chains">
-      <PreventRepackingRLT/>
-    </OperateOnResidueSubset>
-
     <OperateOnResidueSubset name="fix_non_neighbors" selector="not_neighbor">
       <PreventRepackingRLT/>
     </OperateOnResidueSubset>
-
   </TASKOPERATIONS>
 
   <FILTERS>
@@ -41,16 +34,12 @@
 
     <VirtualRoot name="vr" />
 
-    <AddConstraintsToCurrentConformationMover name="cc" 
-					      bound_width="0.1" 
-					      CA_only="1"
-					      />
+    <AddConstraintsToCurrentConformationMover name="cc" bound_width="0.1" CA_only="1" />
 
     <MutateResidue name="mutate" residue_selector="residue_position_to_explore" new_res="%%aa%%" preserve_atom_coords="true"/>
 
-    <FastRelax name="relax" scorefxn="sfxn_cc" repeats="3" disable_design="true"
-	       task_operations="fix_some_chains,ex12,ifc,repack_only,ic,fix_non_neighbors"
-	       cartesian="true" bondangle="true" />
+    <FastRelax name="relax" scorefxn="sfxn_cc" repeats="3" disable_design="true" relaxscript="MonomerRelax2019"
+	       task_operations="ex12,ifc,repack_only,ic,fix_non_neighbors"/>
 
   </MOVERS>
 
